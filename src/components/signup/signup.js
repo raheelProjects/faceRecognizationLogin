@@ -1,13 +1,38 @@
 import './signup.css'
-import * as faceapi from "face-api.js"
-import Webcam from 'react-webcam';
+
 import { Button, Modal } from 'antd';
 import React, { useState } from 'react';
 
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle";
+import Webcam from 'react-webcam';
 
 function Signup() {
+    const webcamRef = React.useRef(null);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const videoConstraints = {
+        width: 220,
+        height: 200,
+        facingMode: "user"
+      };
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+
+    function cam(){
+    const imageSrc = webcamRef.current.getScreenshot();
+    console.log(imageSrc)
+    }
 
   return(
     <div className="signup">
@@ -29,9 +54,24 @@ function Signup() {
         </div>
 
         <div className='div4'>
-            <button>Detect face</button>
+            <button>Signup</button>
         </div>
 
+        <Button type="primary" onClick={showModal}>
+        Detect face
+      </Button>
+
+  <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <p>Detect your face</p>
+        <Webcam 
+        audio={false}
+        height={200}
+        ref={webcamRef}
+        screenshotFormat="image/jpeg"
+        width={220}
+        videoConstraints={videoConstraints}/>
+        <button onClick={(e)=>{e.preventDefault();cam()}}>capture</button>
+      </Modal>
         </div>
 
     </div>

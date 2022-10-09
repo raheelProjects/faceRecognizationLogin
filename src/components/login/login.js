@@ -2,10 +2,44 @@
 import { Button, Modal } from 'antd';
 import React, { useState } from 'react';
 
+import Webcam from 'react-webcam';
+
+
+
 function Login() {
+
+    const webcamRef = React.useRef(null);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const videoConstraints = {
+        width: 220,
+        height: 200,
+        facingMode: "user"
+      };
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+
     const [email, setEmail]=useState('')
     const [pass, setPass]=useState('')
 
+    function cam(){
+        
+    const imageSrc = webcamRef.current.getScreenshot();
+    console.log(imageSrc)
+        
+    }
 
     function savee(){
         setEmail(email)
@@ -34,10 +68,21 @@ function Login() {
         <div className='div4'>
             <button onClick={savee}>Login</button>
         </div>
-        <div className='div4'>
-            <button>Login with face</button>
-        </div>
+        <Button type="primary" onClick={showModal}>
+        Login with Face
+      </Button>
 
+  <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <p>Detect your face</p>
+        <Webcam 
+        audio={false}
+        height={200}
+        ref={webcamRef}
+        screenshotFormat="image/jpeg"
+        width={220}
+        videoConstraints={videoConstraints}/>
+        <button onClick={(e)=>{e.preventDefault();cam()}}>capture</button>
+      </Modal>
         </div>
 
     </div>

@@ -93,7 +93,7 @@ const faceMatcher = new faceapi.FaceMatcher(labeledDescriptors, threshold)
   .withFaceDescriptor()
 
   if (singleResult) {
-    console.log("we reached here")
+    console.log(singleResult.descriptor)
     const bestMatch = faceMatcher.findBestMatch(singleResult.descriptor)
     console.log("The predection is "+bestMatch)
   }

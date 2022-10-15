@@ -1,6 +1,7 @@
 import * as faceapi from "face-api.js"
 import {useEffect,useState} from "react"
 import { loadImage } from 'canvas'
+import Signup from "./components/signup/signup"
 
 
 
@@ -121,8 +122,9 @@ const faceMatcher = new faceapi.FaceMatcher(labeledDescriptors, threshold)
 
   return (
    <>
-   <input type="file" onChange={perform}/>
-   {first!=null? (<img src ={first} accept="image/*"/>):(<> </>) }
+    <Signup/> 
+ {/*   <input type="file" onChange={perform}/>
+   {first!=null? (<img src ={first} accept="image/*"/>):(<> </>)}  */}
    </>
   );
 }

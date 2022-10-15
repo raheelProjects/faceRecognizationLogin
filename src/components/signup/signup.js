@@ -45,6 +45,7 @@ function Signup() {
     try{ 
 let detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
 if(detections){ 
+  alert("image taken press ok now")
 setimge(detections.descriptor)}
 else{
   alert("please keep your face straight while capture")

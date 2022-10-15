@@ -2,10 +2,12 @@ import './signup.css'
 
 import { Button, Modal } from 'antd';
 import React, { useState } from 'react';
-var axios = require('axios');
+
 import * as faceapi from "face-api.js"
 
 import Webcam from 'react-webcam';
+
+import axios from "axios";
 
 function Signup() {
     const webcamRef = React.useRef(null);
@@ -23,10 +25,7 @@ function Signup() {
       };
 
   const showModal = () => {
-
       setIsModalOpen(true);
- 
-    
   };
 
   const handleOk = () => {
@@ -40,10 +39,21 @@ function Signup() {
 
    async function cam () {
     const imageSrc = webcamRef.current.getScreenshot();
+    console.log(imageSrc)
+    
     let img = await faceapi.fetchImage(imageSrc);
-let detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor();
-    setimge(detections.descriptor)
-    console.log(imge)
+    try{ 
+let detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+if(detections){ 
+setimge(detections.descriptor)}
+else{
+  alert("please keep your face straight while capture")
+}
+}
+catch(error){
+  console.log("is udefined"+error)
+}
+    
     }
 
    const signupPosting = ()=>{
@@ -59,7 +69,8 @@ var config = {
   method: 'post',
   url: 'https://facerecapi.herokuapp.com/signup',
   headers: { 
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    "Access-Control-Allow-Origin": "*"
   },
   data : data
 };
@@ -79,17 +90,17 @@ axios(config)
         <h2>Signup</h2>
         <div className='div3'>
             {/* <p>Email</p> */}
-            <input placeholder='Email' value={email}/>    
+            <input placeholder='Email' value={email} onChange={(e)=>setemail(e.target.value)}/>    
         </div>
 
         <div className='div3'>
             {/* <p>Password</p> */}
-            <input placeholder='Password' value={password}/>
+            <input placeholder='Password' value={password} onChange={(e)=>setpassword(e.target.value)}/>
         </div>
 
         <div className='div3'>
              {/* <p>Username</p> */}
-            <input placeholder='Username' value={username}/>
+            <input placeholder='Username' value={username} onChange={(e)=>setusername(e.target.value)}/>
         </div>
 
         <div className='div4'>
@@ -100,7 +111,7 @@ axios(config)
         Detect face
       </Button>
 
-  <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+  <Modal  title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <p>Detect your face</p>
         <Webcam 
         audio={false}

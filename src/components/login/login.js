@@ -4,9 +4,14 @@ import React, { useState } from 'react';
 
 import Webcam from 'react-webcam';
 
+import {useNavigate } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 
 function Login() {
+  
+
+  const navigate = useNavigate();
 
     const webcamRef = React.useRef(null);
 
@@ -35,9 +40,9 @@ function Login() {
     const [pass, setPass]=useState('')
 
     function cam(){
-        
-    const imageSrc = webcamRef.current.getScreenshot();
-    console.log(imageSrc)
+      navigate("/page1")
+      const imageSrc = webcamRef.current.getScreenshot();
+      console.log(imageSrc)
         
     }
 
@@ -73,7 +78,11 @@ function Login() {
       </Button>
 
   <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+  <div className='div3'>
+            <input value={email} onChange={(e)=>setEmail(e.target.value)}  placeholder='Email'/>    
+        </div>
         <p>Detect your face</p>
+
         <Webcam 
         audio={false}
         height={200}
@@ -81,7 +90,9 @@ function Login() {
         screenshotFormat="image/jpeg"
         width={220}
         videoConstraints={videoConstraints}/>
-        <button onClick={(e)=>{e.preventDefault();cam()}}>capture</button>
+        {/* <Link to="/page1">  */}
+        <button onClick={(e)=>{e.preventDefault();cam()}}>Login</button>
+        {/* </Link> */}
       </Modal>
         </div>
 

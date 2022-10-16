@@ -2,12 +2,9 @@ import * as faceapi from "face-api.js"
 import {useEffect,useState} from "react"
 import { loadImage } from 'canvas'
 import Signup from "./components/signup/signup"
-
-
-
-
-
-  
+import Login from "./components/login/login"
+import Page1 from "./components/pages/page1"
+import { BrowserRouter,Routes, Route } from "react-router-dom"
 
 
  function App() {
@@ -122,7 +119,15 @@ const faceMatcher = new faceapi.FaceMatcher(labeledDescriptors, threshold)
 
   return (
    <>
-    <Signup/> 
+   <BrowserRouter>
+   {/* <Login/> */}
+   <Routes>
+    <Route path="/" element={<Login/>} />
+    <Route path="/page1" element={ <Page1/>} />
+   </Routes>
+   </BrowserRouter>
+   {/* <Page1/> */}
+    {/* <Signup/>  */}
  {/*   <input type="file" onChange={perform}/>
    {first!=null? (<img src ={first} accept="image/*"/>):(<> </>)}  */}
    </>

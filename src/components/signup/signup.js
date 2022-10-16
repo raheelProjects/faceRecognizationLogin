@@ -8,15 +8,21 @@ import * as faceapi from "face-api.js"
 import Webcam from 'react-webcam';
 
 import axios from "axios";
+import {useNavigate } from 'react-router-dom';
 
 function Signup() {
     const webcamRef = React.useRef(null);
+    const navigate = useNavigate();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [imge, setimge] = useState([])
     const [username, setusername] = useState("")
     const [email, setemail] = useState("")
     const [password, setpassword] = useState("")
+
+    const navtologin = ()=>{
+      navigate("/login")
+    }
 
     const videoConstraints = {
         width: 220,
@@ -58,6 +64,14 @@ catch(error){
     }
 
    const signupPosting = ()=>{
+
+    if(imge.length ==0){
+      return alert("no face detected to enter in database")
+    }
+
+    if(email ===""){
+      return alert("no email entered")
+    }
    
 var data = JSON.stringify({
   "username": username,
@@ -78,6 +92,7 @@ var config = {
 
 axios(config)
 .then(function (response) {
+  navtologin()
   alert(JSON.stringify(response.data));
 })
 .catch(function (error) {
@@ -106,6 +121,9 @@ axios(config)
 
         <div className='div4'>
             <button onClick={signupPosting}>Signup</button>
+        </div>
+        <div className='div4'>
+            <button onClick={navtologin}>Already have a account login?</button>
         </div>
 
         <Button type="primary" onClick={showModal}>

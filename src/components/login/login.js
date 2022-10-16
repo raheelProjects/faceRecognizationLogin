@@ -3,9 +3,11 @@ import { Button, Modal } from 'antd';
 import React, { useState } from 'react';
 
 import Webcam from 'react-webcam';
+import * as faceapi from "face-api.js"
 
 import {useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 
 function Login() {
@@ -16,6 +18,7 @@ function Login() {
     const webcamRef = React.useRef(null);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const[imge,setimge] = useState([])
 
     const videoConstraints = {
         width: 220,
@@ -39,23 +42,59 @@ function Login() {
     const [email, setEmail]=useState('')
     const [pass, setPass]=useState('')
 
-    function cam(){
-      navigate("/page1")
+   async function cam(){
+      
       const imageSrc = webcamRef.current.getScreenshot();
       console.log(imageSrc)
+      let img = await faceapi.fetchImage(imageSrc);
+      try{ 
+  let detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+  if(detections){ 
+    alert("image taken press ok now")
+  setimge(detections.descriptor)}
+  else{
+    alert("please keep your face straight while capture")
+  }
+  }
+  catch(error){
+    console.log("is udefined"+error)
+  }
         
     }
 
     function savee(){
-        setEmail(email)
-        setPass(pass)
-        console.log(email)
-        console.log(pass)
-        if(email.length && pass.length >= 3){
-            alert("Login")
-        }else{
-            alert("Incorrect")
+        if(imge.length==0){
+          return alert("Please click on detect face and capture image currently image is null")
         }
+        else if(email === ""){
+          return alert("no email entered")
+        }
+        var data = JSON.stringify({
+          "email": email,
+          "fd": imge
+        });
+        var config = {
+          method: 'post',
+          url: 'https://facerecapi.herokuapp.com/signin/face',
+          headers: { 
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+        
+        axios(config)
+        .then(function (response) {
+          alert(JSON.stringify(response.data));
+          navigate("/page1")
+        })
+        .catch(function (error) {
+          if(error.response.status==400){
+            alert("not that user")
+          }
+          else if(error.response.status ==404){
+            alert("no such user found")
+          }
+        });
     }
    
     return(
@@ -66,21 +105,17 @@ function Login() {
             <input value={email} onChange={(e)=>setEmail(e.target.value)}  placeholder='Email'/>    
         </div>
 
-        <div className='div3'>
-            <input  value={pass} onChange={(e)=>setPass(e.target.value)}  placeholder='Password'/>
-        </div>
+        
 
         <div className='div4'>
             <button onClick={savee}>Login</button>
         </div>
         <Button type="primary" onClick={showModal}>
-        Login with Face
+        Detect Face
       </Button>
 
   <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-  <div className='div3'>
-            <input value={email} onChange={(e)=>setEmail(e.target.value)}  placeholder='Email'/>    
-        </div>
+ 
         <p>Detect your face</p>
 
         <Webcam 
@@ -91,7 +126,7 @@ function Login() {
         width={220}
         videoConstraints={videoConstraints}/>
         {/* <Link to="/page1">  */}
-        <button onClick={(e)=>{e.preventDefault();cam()}}>Login</button>
+        <button onClick={(e)=>{e.preventDefault();cam()}}>Capture</button>
         {/* </Link> */}
       </Modal>
         </div>

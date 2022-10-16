@@ -122,7 +122,8 @@ const faceMatcher = new faceapi.FaceMatcher(labeledDescriptors, threshold)
    <BrowserRouter>
    {/* <Login/> */}
    <Routes>
-    <Route path="/" element={<Login/>} />
+    <Route path="/" element={<Signup/>} />
+    <Route path="/login" element={<Login/>} />
     <Route path="/page1" element={ <Page1/>} />
    </Routes>
    </BrowserRouter>

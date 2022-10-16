@@ -51,7 +51,7 @@ function Login() {
   let detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
   if(detections){ 
     alert("image taken press ok now")
-  setimge(detections.descriptor)}
+  setimge([detections.descriptor])}
   else{
     alert("please keep your face straight while capture")
   }
@@ -69,6 +69,10 @@ function Login() {
         else if(email === ""){
           return alert("no email entered")
         }
+        setimge(new Array(imge))
+        console.log(imge)
+        console.log("length of imge: "+imge.length)
+        console.log("type of imge"+typeof(imge))
         var data = JSON.stringify({
           "email": email,
           "fd": imge
@@ -94,6 +98,7 @@ function Login() {
           else if(error.response.status ==404){
             alert("no such user found")
           }
+          console.log(error)
         });
     }
    
